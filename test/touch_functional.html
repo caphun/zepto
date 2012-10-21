@@ -24,6 +24,10 @@
     touch events test (scrollable cancel, single tap only)
   </div>
 
+  <div id="touch_test_ghost" style="width: 200px; height: 200px; background: #ecc; -webkit-user-select: none">
+    <a href="#tapped" style="display: block; background: red">touch events test (ghost clicks on tap)</a>
+  </div>
+
   <div id="browser"> </div>
 
   <script>
@@ -62,7 +66,21 @@
     })
     listen_to('#touch_test_single');
 
-
+    /**
+     * #touch_test_ghost
+     * Container has a click binding with a tappable link that should not fire a click
+     *
+     * Prevents ghost clicks after tap event from bubbling to the container
+     * Captures tap
+     */
+    $('#touch_test_ghost a').bind('tap', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    })
+    listen_to('#touch_test_ghost a');
+    $('#touch_test_ghost').bind('click', function() {
+      $(this).append(' | ghost click!');
+    })
 
     function listen_to(el) {
       $(el).tap(function(){
